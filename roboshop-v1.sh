@@ -9,12 +9,15 @@ for instance in $@
 do
 
     echo "creating instance: $instance"
-# aws ec2 run-instances \
-#     --image-id ami-0055977a6e828a4f4 \
-#     --instance-type t3.micro \
-#     --security-groups "roboshop-common" \
-# 	--tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=roboshop-shell}]' \
-# 	--query 'Instances[0].InstanceId' \
-#     --output text
 
+    instance_id=$(aws ec2 run-instances \
+        --image-id $ami_id \
+        --instance-type $instance_type \
+        --security-groups "roboshop-common" "roboshop-$instance" \
+        --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=roboshop-$instance}]" \
+        --query 'Instances[0].InstanceId' \
+        --output text
+        )
+    echo "Instance ID: $instance_id"
+    
 done
