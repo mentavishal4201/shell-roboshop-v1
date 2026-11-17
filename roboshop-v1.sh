@@ -3,7 +3,7 @@
 ami_id="ami-0055977a6e828a4f4"
 instance_type="t3.micro"
 domain_name="vishaldevops.store"
-hosted_zone_id="Z00703867S0ODMRX3ZHF"
+hosted_zone_id="Z00410031QLRSFC59MD5L"
 
 for instance in $@
 do
@@ -19,6 +19,12 @@ do
         --output text
         )
     echo "Instance ID: $instance_id"
+
+    aws ec2 wait instance-running --instance-ids $instance_id
+
+    sleep 20
+
+    echo "Instance is running"
 
     if [ $instance != "frontend" ]; then
         IP=$( aws ec2 describe-instances --instance-ids $instance_id \
