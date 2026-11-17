@@ -21,21 +21,20 @@ do
     echo "Instance ID: $instance_id"
 
     if [ $instance != "frontend" ]; then
-        IP=$(aws ec2 describe-instance --instance-ids $instance_id \
-             --query 'Reservation[].Instances[].PrivateIpAddress' --output text 
-            )
-        r53_record=${instance}.${domain_name}
+        IP=$( aws ec2 describe-instances --instance-ids $instance_id \
+             --query 'Reservations[].Instances[].PrivateIpAddress' --output text
+        )
+        r53_record="${instance}.${domain_name}"
     else
-        IP=$(aws ec2 describe-instance --instance-ids $instance_id \
-             --query 'Reservation[].Instances[].PublicIpAddress' --output text 
-            )
-        r53_record=${domain_name}
+        IP=$( aws ec2 describe-instances --instance-ids $instance_id \
+             --query 'Reservations[].Instances[].PublicIpAddress' --output text
+        )
+        r53_record="${domain_name}"
     fi
 
     # update R53 record
 
     echo "Record: ${r53_record}"
-
     aws route53 change-resource-record-sets \
     --hosted-zone-id $hosted_zone_id \
     --change-batch '{
@@ -51,4 +50,6 @@ do
             }
         ]
     }'
+
+    echo "Updated R53 record for $instance"
 done
