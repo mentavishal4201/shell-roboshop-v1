@@ -43,4 +43,5 @@ validate $? "start and enable mysql"
 mysql_secure_installation --set-root-pass RoboShop@1
 validate $? "Set up mysql root password"
 
-
+echo "$(timestamp) [INFO] Script Comopleted in $SECONDS seconds"
+echo "$(timestamp) [INFO] Script Complted Execution ==========" | tee -a $logs_file
