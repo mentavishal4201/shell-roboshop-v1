@@ -18,7 +18,7 @@ mkdir -p $logs_folder
 echo "Script started execution at $(date +"%F %T")" &>> $logs_file
 
 timestamp(){
-    date "%F %T"
+    date +"%F %T"
 }
 
 validate(){
@@ -43,6 +43,6 @@ sed -i -e 's/^bind 127.0.0.1/bind 0.0.0.0/' -e 's/protected-mode yes/protected-m
 validate $? "Updating remote connection to redis"
 
 systemctl enable redis &>> $logs_file
-systemctl status redis
+systemctl start redis
 validate $? "Enable and start redis"
 
