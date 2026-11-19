@@ -32,17 +32,22 @@ validate(){
 
 echo "$(timestamp) [INFO] Script Started Execution ==========" | tee -a $logs_file
 
-dnf module disable nodejs -y
-dnf module enable nodejs:24 -y
-dnf install nodejs -y
+dnf module disable nodejs -y &>> $logs_file
+dnf module enable nodejs:24 -y &>> $logs_file
+dnf install nodejs -y &>> $logs_file
 validate $? "installing nodejs24"
 
 node -v
 validate $? "checking version"
 
-useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
-validate $? "creating system user"
+id roboshop $>> $logs_file
 
+if [ $> -ne 0 ]; then
+    useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>> $logs_file
+    validate $? "creating system user"
+else
+    echo -e "$(timestamp) [INFO] system user roboshop already existis....${Y}SKIPPING${N}"
+fi
 
 echo "$(timestamp) [INFO] Script Comopleted in $SECONDS seconds"
 echo "$(timestamp) [INFO] Script Complted Execution ==========" | tee -a $logs_file
