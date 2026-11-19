@@ -4,7 +4,7 @@ user_id=$(id -u)
 logs_folder="/var/log/catalogue"
 logs_file="${logs_folder}/${0}.log"
 domain_name="vishaldevops.store"
-scripts_dir=$($dirname "$(realpath "$0")")
+scripts_dir=$(dirname "$(realpath "$0")")
 R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
@@ -75,6 +75,11 @@ systemctl enable catalogue &>> $logs_file
 systemctl start catalogue &>> $logs_file
 validate $? " enabling and starting the catalogue service"
 
+cp mongo.repo "$scripts_dir/mongo.repo" /etc/yum.repo.d/mongo.repo
+validate $? "Adding mongo repo"
+
+dnf install mongodb-mongosh -y &>> $logs_file
+validate $? "installing mongoDB Client"
 
 echo "$(timestamp) [INFO] Script Comopleted in $SECONDS seconds"
 echo "$(timestamp) [INFO] Script Complted Execution ==========" | tee -a $logs_file
