@@ -15,6 +15,7 @@ if [ $user_id -ne 0 ]; then
     exit 1
 fi
 
+
 mkdir -p $logs_folder
 
 echo "Script started execution at $(date +"%F %T")" &>> $logs_file
@@ -82,6 +83,9 @@ validate $? "Adding mongo repo"
 
 dnf install mongodb-mongosh -y &>> $logs_file
 validate $? "installing mongoDB Client"
+
+mongosh --host "mongodb.$domain_name" </app/db/master-data.js
+validate $? "loading products"
 
 echo "$(timestamp) [INFO] Script Comopleted in $SECONDS seconds"
 echo "$(timestamp) [INFO] Script Complted Execution ==========" | tee -a $logs_file
