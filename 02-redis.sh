@@ -34,15 +34,15 @@ echo "$(timestamp) [INFO] Script Started Execution ==========" | tee -a $logs_fi
 
 
 
-dnf module disable redis -y
-dnf module enable redis:7 -y
-dnf install redis -y
+dnf module disable redis -y &>> $logs_file
+dnf module enable redis:7 -y &>> $logs_file
+dnf install redis -y &>> $logs_file
 validate $? "Installing reis"
 
 sed -i -e 's/^bind 127.0.0.1/bind 0.0.0.0/' -e 's/protected-mode yes/protected-mode no/' /etc/redis/redis.conf
 validate $? "Updating remote connection to redis"
 
-systemctl enable redis
+systemctl enable redis &>> $logs_file
 systemctl status redis
 validate $? "Enable and start redis"
 
