@@ -43,8 +43,9 @@ systemctl start rabbitmq-server &>> $logs_file
 validate $? "Enabling and staring rabbit mq"
 
 rabbitmqctl add_user roboshop roboshop123
-rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*"
 validate $? "creating rabbitmq user for roboshop"
+rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*"
+validate $? "Setting up permission for rabbitmq user for robo shop"
 
 echo "$(timestamp) [INFO] Script Comopleted in $SECONDS seconds"
 echo "$(timestamp) [INFO] Script Complted Execution ==========" | tee -a $logs_file
