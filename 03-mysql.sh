@@ -33,11 +33,11 @@ validate(){
 echo "$(timestamp) [INFO] Script Started Execution ==========" | tee -a $logs_file
 
 dnf module enable mysql:8.4 -y
-dnf install mysql-server -y $>> $logs_file
+dnf install mysql-server -y &&>> $logs_file
 validate $? "installing mysql server"
 
-systemctl enable mysqld
-systemctl start mysqld
+systemctl enable mysqld &&>> $logs_file
+systemctl start mysqld &&>> $logs_file
 validate $? "start and enable mysql"
 
 mysql_secure_installation --set-root-pass RoboShop@1
