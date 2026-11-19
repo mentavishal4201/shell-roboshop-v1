@@ -51,6 +51,9 @@ else
     echo -e "$(timestamp) [INFO] system user roboshop already existis....${Y}SKIPPING${N}"
 fi
 
+rm -rf /app
+validate $? "validating old code"
+
 mkdir -p /app
 validate $? "creating app directory"
 
@@ -65,7 +68,7 @@ cd /app
 npm install &>> $logs_file
 validate $? "Installing dependencies"
 
-sed -i 's/DOMAIN_NAME/$domain_name' "$scripts_dir/catalogue.service" &>> $logs_file
+sed -i 's/DOMAIN_NAME/$domain_name/g' "$scripts_dir/catalogue.service" &>> $logs_file
 
 cp catalogue.service /etc/systemd/system/catalogue.service &>> $logs_file
 validate $? "validating catalogue.service"
