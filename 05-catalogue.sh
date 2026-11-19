@@ -4,6 +4,7 @@ user_id=$(id -u)
 logs_folder="/var/log/catalogue"
 logs_file="${logs_folder}/${0}.log"
 domain_name="vishaldevops.store"
+scripts_dir=$($dirname "$(realpath "$0")")
 R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
@@ -64,7 +65,7 @@ cd /app
 npm install &>> $logs_file
 validate $? "Installing dependencies"
 
-sed -i 's/DOMAIN_NAME/$domain_name' catalogue.service &>> $logs_file
+sed -i 's/DOMAIN_NAME/$domain_name' "$scripts_dir/catalogue.service" &>> $logs_file
 
 cp catalogue.service /etc/systemd/system/catalogue.service &>> $logs_file
 validate $? "validating catalogue.service"
