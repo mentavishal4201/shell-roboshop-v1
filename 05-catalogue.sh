@@ -69,8 +69,7 @@ npm install &>> $logs_file
 validate $? "Installing dependencies"
 
 sed -i 's/DOMAIN_NAME/$domain_name/g' "$scripts_dir/catalogue.service" &>> $logs_file
-
-cp catalogue.service /etc/systemd/system/catalogue.service &>> $logs_file
+cp "$scripts_dir/catalogue.service" /etc/systemd/system/catalogue.service &>> $logs_file
 validate $? "validating catalogue.service"
 
 systemctl daemon-reload &>> $logs_file
