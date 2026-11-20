@@ -30,14 +30,12 @@ validate(){
     fi
 }
 
-echo "$(timestamp) [INFO] ==== Script started Execution =====" | tee -a $logs_file
-
 dnf module enable maven:3.9 -y &>> $logs_file
 dnf install maven java-25-openjdk-devel -y &>> $logs_file
-validate $? "Install maven and java"
+validate $? "Installing Java and Maven"
 
 alternatives --set java "/usr/lib/jvm/java-25-openjdk/bin/java"
-validate $? "setting java-25 as default java version"
+validate $? "Setting Java 25 as default Java version"
 
 echo "export JAVA_HOME=$(dirname $(dirname $(readlink -f /usr/bin/java)))" > /etc/profile.d/java.sh
 source /etc/profile.d/java.sh
@@ -69,16 +67,14 @@ mvn clean package &>> $logs_file
 validate $? "Installing dependencies"
 
 mv target/shipping.jar shipping.jar
-validate $? "Moving shipping jar file"
+validate $? "Moving shipping.jar file"
 
 sed -i "s/DOMAIN_NAME/$domain_name/g" "$scripts_dir/shipping.service"
 cp "$scripts_dir/shipping.service" /etc/systemd/system/shipping.service
 
 dnf install mysql -y &>> $logs_file
-validate $? "Installing mysql client"
+validate $? "Installing MySQL client"
 
-mysql -h "mysql.$domain_name" -uroot -pRoboShop@1 < /app/db/master-data.sql
-validate $? "Loading shipping data"
 count=$(mysql -h "mysql.$domain_name" -u root -pRoboShop@1 -N -B -e "SELECT COUNT(*) FROM cities.cities;" 2>> $logs_file )
 if [ -z "$count" ] || [ "$count" -eq 0 ]; then
     mysql -h "mysql.$domain_name" -uroot -pRoboShop@1 < /app/db/master-data.sql
