@@ -33,7 +33,7 @@ validate(){
 echo "$(timestamp) [INFO] ==== Script Started Execution ======" | tee -a $logs_file
 
 dnf install python3.14 python3.14-pip -y &>> $logs_file
-validate $? "Installing python 3.14"
+validate $? "Installing Python 3.14"
 
 id roboshop &>> $logs_file
 if [ $? -ne 0 ]; then
@@ -56,19 +56,19 @@ cd /app
 unzip /tmp/payment.zip &>> $logs_file
 validate $? "Unzipping payment"
 
-python3.14 -m venv /app/.venv
-validate $? "creating virtual environment"
+python3.14 -m venv /app/.venv &>> $logs_file
+validate $? "Creating virtual environment"
 
-/app/.venv/bin/pip install -r requirements.txt
+/app/.venv/bin/pip install -r requirements.txt &>> $logs_file
 validate $? "Installing dependencies"
 
 sed -i "s/DOMAIN_NAME/$domain_name/g" "$scripts_dir/payment.service"
 cp "$scripts_dir/payment.service" /etc/systemd/system/payment.service
 
-systemctl daemon-reload
-systemctl enable payment
-systemctl restart payment
-validate $? "Starting/Restarting payment"
+systemctl daemon-reload &>> $logs_file
+systemctl enable payment &>> $logs_file
+systemctl restart payment &>> $logs_file
+validate $? "Starting/Restaring payment"
+
 
 echo "$(timestamp) [INFO] Script completed in $SECONDS seconds"
-echo "$(timestamp) [INFO] ==== Script completed Execution =====" | tee -a $logs_file
