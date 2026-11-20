@@ -34,8 +34,6 @@ echo "$(timestamp) [INFO] ==== Script Started Execution ======" | tee -a $logs_f
 
 dnf install python3.14 python3.14-pip -y &>> $logs_file
 validate $? "Installing python 3.14"
-python3.14 --version
-validate $? "checking python version"
 
 id roboshop &>> $logs_file
 if [ $? -ne 0 ]; then
